@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unite Clinic — Online Doctor Appointment</title>
+    <meta name="description"
+        content="Book doctor appointments online, manage schedules and lab reports with Unite Clinic.">
+    <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════════ HOME ════ -->
+    <div id="home" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+        </nav>
+        <div class="home-hero">
+            <h1>Doctor Appointments<br><span>Made Simple</span></h1>
+            <p>Book appointments online, get lab reports digitally, and manage your healthcare journey — all in one
+                place.</p>
+            <div class="portal-cards">
+                <div class="portal-card" onclick="showPage('client-login')">
+                    <div class="icon">🧑‍⚕️</div>
+                    <h3>Patient Portal</h3>
+                    <p>Book appointments, view schedules & lab reports</p>
+                </div>
+                <div class="portal-card" onclick="showPage('doctor-login')">
+                    <div class="icon">👨‍⚕️</div>
+                    <h3>Doctor Portal</h3>
+                    <p>Manage appointments & patient prescriptions</p>
+                </div>
+                <div class="portal-card" onclick="showPage('lab-login')">
+                    <div class="icon">🔬</div>
+                    <h3>Laboratory Portal</h3>
+                    <p>Upload test reports & manage lab orders</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ CLIENT LOGIN ════ -->
+    <div id="client-login" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <button class="btn btn-outline" onclick="showPage('home')">← Home</button>
+        </nav>
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>Patient Login</h2>
+                <p class="subtitle">Welcome back! Login to manage your appointments.</p>
+                <div id="client-login-err" class="error-msg"></div>
+                <form onsubmit="clientLogin(event)">
+                    <div class="form-group"><label>Username</label><input id="cl-user" type="text"
+                            placeholder="Enter username" required></div>
+                    <div class="form-group"><label>Password</label><input id="cl-pass" type="password"
+                            placeholder="Enter password" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;">Login</button>
+                </form>
+                <div class="auth-link">Don't have an account? <a href="#" onclick="showPage('client-register')">Register
+                        Now</a></div>
+                <div class="auth-link mt-1" style="font-size:.78rem;color:#5a7a9a;">Demo: <b>partone</b> /
+                    <b>asd123456</b></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ CLIENT REGISTER ════ -->
+    <div id="client-register" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <button class="btn btn-outline" onclick="showPage('client-login')">← Login</button>
+        </nav>
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>Patient Registration</h2>
+                <p class="subtitle">Create your account to get started.</p>
+                <div id="client-reg-err" class="error-msg"></div>
+                <form onsubmit="clientRegister(event)">
+                    <div class="form-group"><label>Username</label><input id="cr-user" type="text"
+                            placeholder="Choose a username" required></div>
+                    <div class="form-group"><label>Email</label><input id="cr-email" type="email"
+                            placeholder="Email address" required></div>
+                    <div class="form-group"><label>Password</label><input id="cr-pass" type="password"
+                            placeholder="Choose a password" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;">Create
+                        Account</button>
+                </form>
+                <div class="auth-link">Already have an account? <a href="#" onclick="showPage('client-login')">Login
+                        here</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════ CLIENT DASHBOARD ════ -->
+    <div id="client-dash" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <div class="nav-user">
+                <span class="username client-nav-name"></span>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+        <div class="dash-layout">
+            <div class="sidebar">
+                <div class="sidebar-item active" data-sec="book-appt" onclick="showClientSection('book-appt')"><span
+                        class="si">📅</span> Book Appointment</div>
+                <div class="sidebar-item" data-sec="view-appts" onclick="showClientSection('view-appts')"><span
+                        class="si">📋</span> My Appointments</div>
+                <div class="sidebar-item" data-sec="update-profile" onclick="showClientSection('update-profile')"><span
+                        class="si">👤</span> Update Profile</div>
+            </div>
+            <div class="main-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-num" id="c-stat-today">0</div>
+                        <div class="stat-label">Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="c-stat-future">0</div>
+                        <div class="stat-label">Upcoming</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="c-stat-past">0</div>
+                        <div class="stat-label">Past</div>
+                    </div>
+                </div>
+
+                <!-- BOOK APPOINTMENT -->
+                <div id="client-sec-book-appt">
+                    <div class="page-title">Book Appointment</div>
+                    <p class="page-sub">Search for clinics, pick a doctor and confirm your slot.</p>
+                    <div class="steps">
+                        <div class="step current" id="book-step-header-1">1 · Find Clinic</div>
+                        <div class="step" id="book-step-header-2">2 · Pick Doctor</div>
+                        <div class="step" id="book-step-header-3">3 · Confirm Slot</div>
+                    </div>
+                    <!-- Step 1 -->
+                    <div id="book-step-1">
+                        <div class="section-card">
+                            <h3>Search Clinics by Location</h3>
+                            <form onsubmit="searchClinics(event)"
+                                style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;">
+                                <div class="form-group" style="flex:1;min-width:200px;margin:0;">
+                                    <label>Location</label>
+                                    <input id="book-location" type="text" placeholder="e.g. surat, navsari">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Search Clinics</button>
+                            </form>
+                        </div>
+                        <div class="table-wrap" style="margin-top:1rem;">
+                            <div id="clinic-results" class="no-data">Enter a location to find clinics near you.</div>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div id="book-step-2" style="display:none;">
+                        <div class="section-card">
+                            <h3>Available Doctors</h3>
+                            <div id="doctor-results"></div>
+                        </div>
+                        <div class="flex-end"><button class="btn btn-primary" onclick="goToStep3()">Next: Choose Slot
+                                →</button></div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div id="book-step-3" style="display:none;">
+                        <div class="section-card">
+                            <h3>Confirm Your Appointment</h3>
+                            <p class="mb-1" style="color:var(--accent);font-weight:500;" id="step3-docname"></p>
+                            <form onsubmit="confirmBooking(event)">
+                                <div class="form-row">
+                                    <div class="form-group"><label>Date</label><input id="book-date" type="date"
+                                            required></div>
+                                    <div class="form-group"><label>Time Slot</label><select id="book-slot" required>
+                                            <option value="">Select time...</option>
+                                        </select></div>
+                                </div>
+                                <div class="form-group"><label>Description / Symptoms</label><input id="book-desc"
+                                        type="text" placeholder="Brief description of your condition"></div>
+                                <div class="flex-end">
+                                    <button type="button" class="btn btn-outline" onclick="showBookStep(2)">←
+                                        Back</button>
+                                    <button type="submit" class="btn btn-primary">✅ Confirm Booking</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW APPOINTMENTS -->
+                <div id="client-sec-view-appts" style="display:none;">
+                    <div class="page-title">My Appointments</div>
+                    <p class="page-sub">View your today, upcoming and past appointments.</p>
+                    <div class="tabs">
+                        <div class="tab active" data-tab="today" onclick="switchTab('today','appt-tab-')">Today</div>
+                        <div class="tab" data-tab="future" onclick="switchTab('future','appt-tab-')">Upcoming</div>
+                        <div class="tab" data-tab="past" onclick="switchTab('past','appt-tab-')">Past</div>
+                    </div>
+                    <div class="table-wrap">
+                        <div id="appt-tab-today" class="tab-content active"></div>
+                        <div id="appt-tab-future" class="tab-content"></div>
+                        <div id="appt-tab-past" class="tab-content"></div>
+                    </div>
+                </div>
+
+                <!-- UPDATE PROFILE -->
+                <div id="client-sec-update-profile" style="display:none;">
+                    <div class="page-title">Update Profile</div>
+                    <p class="page-sub">Logged in as: <strong id="up-user"></strong></p>
+                    <div class="section-card">
+                        <div id="up-success" class="success-msg"></div>
+                        <form onsubmit="saveClientProfile(event)">
+                            <div class="form-row">
+                                <div class="form-group"><label>Email</label><input id="up-email" type="email"></div>
+                                <div class="form-group"><label>Phone</label><input id="up-phone" type="text"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Blood Group</label>
+                                    <select id="up-blood">
+                                        <option value="">Select...</option>
+                                        <option>A+</option>
+                                        <option>A-</option>
+                                        <option>B+</option>
+                                        <option>B-</option>
+                                        <option>AB+</option>
+                                        <option>AB-</option>
+                                        <option>O+</option>
+                                        <option>O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group"><label>Age</label><input id="up-age" type="number"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Date of Birth</label><input id="up-dob" type="date">
+                                </div>
+                                <div class="form-group"><label>Allergy</label><input id="up-allergy" type="text"></div>
+                            </div>
+                            <div class="form-group"><label>Address</label><input id="up-address" type="text"></div>
+                            <div class="flex-end"><button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div><!-- /main-content -->
+        </div><!-- /dash-layout -->
+    </div><!-- /client-dash -->
+
+    <!-- ═══════════════════════════════════════ DOCTOR LOGIN ════ -->
+    <div id="doctor-login" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <button class="btn btn-outline" onclick="showPage('home')">← Home</button>
+        </nav>
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>Doctor Login</h2>
+                <p class="subtitle">Access your patient appointments and schedule.</p>
+                <div id="doctor-login-err" class="error-msg"></div>
+                <form onsubmit="doctorLogin(event)">
+                    <div class="form-group"><label>Username</label><input id="dl-user" type="text"
+                            placeholder="Doctor username" required></div>
+                    <div class="form-group"><label>Password</label><input id="dl-pass" type="password"
+                            placeholder="Password" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;">Login</button>
+                </form>
+                <div class="auth-link">New here? <a href="#" onclick="showPage('doctor-register')">Register as
+                        Doctor</a></div>
+                <div class="auth-link mt-1" style="font-size:.78rem;color:#5a7a9a;">Demo: <b>darsh</b> / <b>1234</b>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════ DOCTOR REGISTER ════ -->
+    <div id="doctor-register" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <button class="btn btn-outline" onclick="showPage('doctor-login')">← Login</button>
+        </nav>
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>Doctor Registration</h2>
+                <p class="subtitle">Create your doctor account.</p>
+                <div id="doctor-reg-err" class="error-msg"></div>
+                <form onsubmit="doctorRegister(event)">
+                    <div class="form-group"><label>Username</label><input id="dr-user" type="text"
+                            placeholder="Choose a username" required></div>
+                    <div class="form-group"><label>Email</label><input id="dr-email" type="email"
+                            placeholder="Email address" required></div>
+                    <div class="form-group"><label>Speciality</label><input id="dr-spec" type="text"
+                            placeholder="e.g. Cardiologist, Dentist"></div>
+                    <div class="form-group"><label>Password</label><input id="dr-pass" type="password"
+                            placeholder="Choose a password" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;">Create
+                        Account</button>
+                </form>
+                <div class="auth-link">Already registered? <a href="#" onclick="showPage('doctor-login')">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ DOCTOR DASHBOARD ════ -->
+    <div id="doctor-dash" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <div class="nav-user">
+                <span class="username doctor-nav-name"></span>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+        <div class="dash-layout">
+            <div class="sidebar">
+                <div class="sidebar-item active" data-sec="d-appointments"
+                    onclick="showDoctorSection('d-appointments')"><span class="si">📋</span> Appointments</div>
+                <div class="sidebar-item" data-sec="d-profile" onclick="showDoctorSection('d-profile')"><span
+                        class="si">👤</span> My Profile</div>
+            </div>
+            <div class="main-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-num" id="d-stat-today">0</div>
+                        <div class="stat-label">Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="d-stat-total">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="d-stat-done">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+
+                <!-- APPOINTMENTS -->
+                <div id="doctor-sec-d-appointments">
+                    <div class="page-title">Patient Appointments</div>
+                    <p class="page-sub">View and manage all your patient appointments.</p>
+                    <div class="table-wrap">
+                        <div id="d-appt-list"></div>
+                    </div>
+                </div>
+
+                <!-- PROFILE -->
+                <div id="doctor-sec-d-profile" style="display:none;">
+                    <div class="page-title">My Profile</div>
+                    <p class="page-sub">Logged in as <strong id="dp-username"></strong></p>
+                    <div class="section-card">
+                        <div id="dp-success" class="success-msg"></div>
+                        <form onsubmit="saveDoctorProfile(event)">
+                            <div class="form-row">
+                                <div class="form-group"><label>Email</label><input id="dp-email" type="email"></div>
+                                <div class="form-group"><label>Phone</label><input id="dp-phone" type="text"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Speciality</label><input id="dp-speciality" type="text">
+                                </div>
+                                <div class="form-group"><label>Degree</label><input id="dp-degree" type="text"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Experience (years)</label><input id="dp-experience"
+                                        type="number"></div>
+                                <div class="form-group"><label>Age</label><input id="dp-age" type="number"></div>
+                            </div>
+                            <div class="form-group"><label>Consultation Fee (₹)</label><input id="dp-fee" type="number">
+                            </div>
+                            <div class="flex-end"><button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ LAB LOGIN ════ -->
+    <div id="lab-login" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <button class="btn btn-outline" onclick="showPage('home')">← Home</button>
+        </nav>
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>Laboratory Login</h2>
+                <p class="subtitle">Manage test reports and lab orders.</p>
+                <div id="lab-login-err" class="error-msg"></div>
+                <form onsubmit="labLogin(event)">
+                    <div class="form-group"><label>Username</label><input id="ll-user" type="text"
+                            placeholder="Lab username" required></div>
+                    <div class="form-group"><label>Password</label><input id="ll-pass" type="password"
+                            placeholder="Password" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;">Login</button>
+                </form>
+                <div class="auth-link">New lab? <a href="#" onclick="showPage('lab-register')">Register Here</a></div>
+                <div class="auth-link mt-1" style="font-size:.78rem;color:#5a7a9a;">Demo: <b>abc</b> / <b>123</b></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ LAB REGISTER ════ -->
+    <div id="lab-register" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <button class="btn btn-outline" onclick="showPage('lab-login')">← Login</button>
+        </nav>
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>Lab Registration</h2>
+                <p class="subtitle">Create your laboratory account.</p>
+                <div id="lab-reg-err" class="error-msg"></div>
+                <form onsubmit="labRegister(event)">
+                    <div class="form-group"><label>Username</label><input id="lr-user" type="text"
+                            placeholder="Lab username" required></div>
+                    <div class="form-group"><label>Email</label><input id="lr-email" type="email"
+                            placeholder="Lab email" required></div>
+                    <div class="form-group"><label>Password</label><input id="lr-pass" type="password"
+                            placeholder="Password" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;">Register
+                        Lab</button>
+                </form>
+                <div class="auth-link">Already registered? <a href="#" onclick="showPage('lab-login')">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════ LAB DASHBOARD ════ -->
+    <div id="lab-dash" class="page">
+        <nav>
+            <span class="nav-brand"><span class="logo-icon">🏥</span> Unite<span>Clinic</span></span>
+            <div class="nav-user">
+                <span class="username lab-nav-name"></span>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+        <div class="dash-layout">
+            <div class="sidebar">
+                <div class="sidebar-item active"><span class="si">📊</span> Reports Dashboard</div>
+            </div>
+            <div class="main-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-num" id="l-stat-total">0</div>
+                        <div class="stat-label">Total Reports</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="l-stat-pending">0</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="l-stat-done">0</div>
+                        <div class="stat-label">Uploaded</div>
+                    </div>
+                </div>
+                <div class="page-title">Assigned Reports</div>
+                <p class="page-sub">Review and upload patient lab reports.</p>
+                <div class="table-wrap">
+                    <div id="l-report-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
